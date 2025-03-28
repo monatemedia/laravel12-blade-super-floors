@@ -45,7 +45,8 @@
 
             <!-- Contact Form -->
             <div class="bg-white p-8 rounded-lg shadow-lg">
-                <form action="your_form_handler.php" method="POST" class="space-y-6">
+                <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
+                    @csrf
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                         <input type="text" id="name" name="name"
@@ -63,13 +64,15 @@
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                         <input type="tel" id="phone" name="phone"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#F40B0C] focus:ring focus:ring-[#F40B0C] focus:ring-opacity-50" />
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#F40B0C] focus:ring focus:ring-[#F40B0C] focus:ring-opacity-50"
+                            required />
                     </div>
 
                     <div>
                         <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
                         <textarea id="message" name="message" rows="4"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#F40B0C] focus:ring focus:ring-[#F40B0C] focus:ring-opacity-50"></textarea>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#F40B0C] focus:ring focus:ring-[#F40B0C] focus:ring-opacity-50"
+                            required></textarea>
                     </div>
 
                     <button type="submit"
@@ -77,6 +80,12 @@
                         Send Message
                     </button>
                 </form>
+                <!-- Success Message -->
+                @if (session('success'))
+                    <div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

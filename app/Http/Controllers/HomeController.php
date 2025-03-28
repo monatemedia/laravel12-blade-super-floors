@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -11,7 +12,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('index')->name('home');
+        return view('index');
     }
 
     /**
@@ -23,16 +24,27 @@ class HomeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Handle contact form submission.
      */
     public function store(Request $request)
     {
-        // Submit contact form
+        // Validate form fields
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'message' => 'required|string|max:500',
+            'email' => 'required|email',
+            'phone' => 'nullable|string|max:20',
+            'message' => 'required|string|min:10',
         ]);
+
+        // Send email notification (optional)
+        Mail::raw("You received a new message from: {$request->name}\n\n{$request->message}", function ($mail) use ($request) {
+            $mail->to('edward@monatemedia.com')
+                ->subject('New Contact Form Submission')
+                ->replyTo($request->email);
+        });
+
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Your message has been sent successfully.');
     }
 
     /**
@@ -65,13 +77,5 @@ class HomeController extends Controller
     public function destroy(string $id)
     {
         //
-    }
-
-    /**
-     * Display privacy policy.
-     */
-    public function privacyPolicy()
-    {
-        return view('privacy-policy')->name('privacy');
     }
 }
